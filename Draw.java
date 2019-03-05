@@ -100,10 +100,6 @@ public class Draw extends JComponent{
 			resource = getClass().getResource("run6.png");
 			state = 0;
 		}
-		else if(state == 7){
-			resource = getClass().getResource("run7.png");
-			state = 0;
-		}
 
 		try{
 			image = ImageIO.read(resource);
