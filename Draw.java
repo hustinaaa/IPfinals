@@ -128,9 +128,9 @@ public class Draw extends JComponent{
 	public void attackAnimation(){
 		Thread thread1 = new Thread(new Runnable(){
 			public void run(){
-				for(int ctr = 0; ctr < 5; ctr++){
+				for(int ctr = 0; ctr < 4; ctr++){
 					try {
-						if(ctr==4){
+						if(ctr==3){
 							resource = getClass().getResource("run0.png");
 						}
 						else{
@@ -167,7 +167,7 @@ public class Draw extends JComponent{
 				for(int ctr = 0; ctr < 5; ctr++){
 					try {
 						if(ctr==4){
-							resource = getClass().getResource("run0.png");
+							resource = getClass().getResource("jump0.png");
 						}
 						else{
 							resource = getClass().getResource("jump"+ctr+".png");
@@ -197,19 +197,52 @@ public class Draw extends JComponent{
 		thread2.start();
 	}
 
+public void teleportAnimation(){
+		Thread thread3 = new Thread(new Runnable(){
+			public void run(){
+				for(int ctr = 0; ctr < 9; ctr++){
+					try {
+						if(ctr==8){
+							resource = getClass().getResource("teleport0.png");
+						}
+						else{
+							resource = getClass().getResource("teleport"+ctr+".png");
+						}
+						
+						try{
+							image = ImageIO.read(resource);
+						}
+						catch(IOException e){
+							e.printStackTrace();
+						}
+				        repaint();
+				        Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				checkCollision();
+						for(Enemy monster : monsterList){
+							if(monster.contact){
+								monster.health = monster.health - 10;
+							}
+						}
+			}
+		});
+		thread3.start();
+	}
+
+	public void teleport(){
+		teleportAnimation();
+	}
+
 	public void jump(){
 		jumpAnimation();
 	}
 
 	public void attack(){
 		attackAnimation();
-	}
-
-	public void moveDown(){
-		y = y + 5;
-		reloadImage();
-		repaint();
-		checkCollision();
 	}
 
 	public void moveRight(){

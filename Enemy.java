@@ -13,7 +13,7 @@ public class Enemy{
 	public int yPos = 425;
 	public int width = 0;
 	public int height = 0;
-	public int health = 20;
+	public int health = 30;
 	public boolean idle = true;
 	public boolean alive = true;
 	public boolean contact = false;
@@ -53,9 +53,9 @@ public class Enemy{
 		Thread monThread = new Thread(new Runnable(){
 			public void run(){
 				while(idle){
-					for(int ctr = 0; ctr < 18; ctr++){
+					for(int ctr = 0; ctr < 6; ctr++){
 						try {
-							if(ctr==17){
+							if(ctr==5){
 								resource = getClass().getResource("monster/idle0.png");
 							}
 							else{
@@ -106,7 +106,7 @@ public class Enemy{
 		if(alive){
 			Thread monThread = new Thread(new Runnable(){
 				public void run(){
-					for(int ctr = 0; ctr < 15; ctr++){
+					for(int ctr = 0; ctr < 5; ctr++){
 						try {					
 							resource = getClass().getResource("monster/hurt"+ctr+".png");
 							

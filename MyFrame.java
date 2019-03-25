@@ -17,9 +17,6 @@ public class MyFrame extends JFrame implements KeyListener{
 		else if(e.getKeyCode() == KeyEvent.VK_D){
 			drawing.moveRight();
 		}
-		else if(e.getKeyCode() == KeyEvent.VK_S){
-			drawing.moveDown();
-		}
 		else if(e.getKeyCode() == KeyEvent.VK_A){
 			drawing.moveLeft();
 		}
@@ -28,6 +25,9 @@ public class MyFrame extends JFrame implements KeyListener{
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_SHIFT){
 			drawing.spawnEnemy();
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_S){
+			drawing.teleportAnimation();
 		}
 
 	}
