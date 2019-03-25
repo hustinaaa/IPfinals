@@ -12,7 +12,7 @@ public class MyFrame extends JFrame implements KeyListener{
 
 	public void keyPressed(KeyEvent e){
 		if(e.getKeyCode() == KeyEvent.VK_W){
-			drawing.moveUp();
+			drawing.jumpAnimation();
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_D){
 			drawing.moveRight();

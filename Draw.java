@@ -37,9 +37,9 @@ public class Draw extends JComponent{
 	public Draw(){
 		spawnEnemy();
 
-		monster1 = new Enemy(475, 390, this);
-		monster2 = new Enemy(540, 390, this);
-		monster3 = new Enemy(620, 390, this);
+		monster1 = new Enemy(500, 300, this);
+		monster2 = new Enemy(500, 800, this);
+		monster3 = new Enemy(500, 400, this);
 
 		monsterList.add(monster1);
 		monsterList.add(monster2);
@@ -161,15 +161,48 @@ public class Draw extends JComponent{
 		thread1.start();
 	}
 
-	public void attack(){
-		attackAnimation();
+	public void jumpAnimation(){
+		Thread thread2 = new Thread(new Runnable(){
+			public void run(){
+				for(int ctr = 0; ctr < 5; ctr++){
+					try {
+						if(ctr==4){
+							resource = getClass().getResource("run0.png");
+						}
+						else{
+							resource = getClass().getResource("jump"+ctr+".png");
+						}
+						
+						try{
+							image = ImageIO.read(resource);
+						}
+						catch(IOException e){
+							e.printStackTrace();
+						}
+				        repaint();
+				        Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				checkCollision();
+						for(Enemy monster : monsterList){
+							if(monster.contact){
+								monster.health = monster.health - 10;
+							}
+						}
+			}
+		});
+		thread2.start();
 	}
 
-	public void moveUp(){
-		y = y - 5;
-		reloadImage();
-		repaint();
-		checkCollision();
+	public void jump(){
+		jumpAnimation();
+	}
+
+	public void attack(){
+		attackAnimation();
 	}
 
 	public void moveDown(){
