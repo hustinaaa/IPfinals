@@ -17,10 +17,12 @@ public class Draw extends JComponent{
 
 	//circle's position
 	public int x = 190;
-	public int y = 390;
+	public int y = 500;
 	public int height = 0;
 	public int width = 0;
 	public int health = 500;
+	int backX = 0;
+	int backXx = 3;
 
 	//animation states
 	public int state = 0;
@@ -61,6 +63,11 @@ public class Draw extends JComponent{
 		Thread gameThread = new Thread(new Runnable(){
 			public void run(){
 				while(true){
+					if(backX > getWidth() * -1){
+						backX -= backXx;
+					}else{
+						backX = 0;
+					}	
 					try{
 						for(int c = 0; c < monsterList.size(); c++){
 							if(monsterList!=null){
@@ -205,7 +212,8 @@ public class Draw extends JComponent{
 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		g.drawImage(backgroundPic, 0, 0, this);
+		g.drawImage(backgroundPic, backX, 0, this);
+		g.drawImage(backgroundPic, backX + getWidth(), 0, this);
 		g.drawImage(image, x, y, this);
 		g.setColor(Color.RED);
 		g.fillRect(5, 5, health*5, 30);
