@@ -3,16 +3,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.Rectangle;
 import java.net.URL;
 import javax.swing.JComponent;
 
 public class Enemy{
 	
-	public int xPos = 450;
-	public int yPos = 300;
+	public int xPos = 855;
+	public int yPos = 425;
 	public int width = 0;
 	public int height = 0;
-	public int life = 20;
+	public int health = 20;
 	public boolean idle = true;
 	public boolean alive = true;
 	public boolean contact = false;
@@ -52,13 +53,13 @@ public class Enemy{
 		Thread monThread = new Thread(new Runnable(){
 			public void run(){
 				while(idle){
-					for(int ctr = 0; ctr < 5; ctr++){
+					for(int ctr = 0; ctr < 18; ctr++){
 						try {
-							if(ctr==4){
+							if(ctr==17){
 								resource = getClass().getResource("monster/idle0.png");
 							}
 							else{
-								resource = getClass().getResource("monster/idle0"+ctr+".png");
+								resource = getClass().getResource("monster/idle"+ctr+".png");
 							}
 							
 							try{
@@ -75,7 +76,7 @@ public class Enemy{
 						}
 					}
 
-					if(life<=0){
+					if(health<=0){
 						die(compPass);
 					}
 				}
@@ -105,7 +106,7 @@ public class Enemy{
 		if(alive){
 			Thread monThread = new Thread(new Runnable(){
 				public void run(){
-					for(int ctr = 0; ctr < 4; ctr++){
+					for(int ctr = 0; ctr < 15; ctr++){
 						try {					
 							resource = getClass().getResource("monster/hurt"+ctr+".png");
 							
@@ -126,5 +127,9 @@ public class Enemy{
 			monThread.start();
 		}
 		alive = false;
+	}
+
+	public Rectangle getBounds(){
+		return (new Rectangle(xPos, yPos, image.getWidth(), image.getHeight()));
 	}
 }

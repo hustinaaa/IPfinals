@@ -3,37 +3,49 @@ import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
+import java.awt.Rectangle;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Random;
+import java.util.*;
 
 public class Draw extends JComponent{
 
 	private BufferedImage image;
-	private BufferedImage backgroundImage;
-	public URL resource = getClass().getResource("idle0.png");
+	private BufferedImage backgroundPic;
+	private URL resource = getClass().getResource("idle0.png");
 
-	public int x = 300;
-	public int y = 300;
-	public int health = 100;
+	//circle's position
+	public int x = 190;
+	public int y = 390;
 	public int height = 0;
 	public int width = 0;
+	public int health = 500;
 
-	
+	//animation states
 	public int state = 0;
 
+	// enemy
+	LinkedList<Enemy> monsterList = new LinkedList<Enemy>();
 
-	
-	public int enemyCount;
-	Enemy[] monsters = new Enemy[10];
+	Enemy monster1;
+	Enemy monster2;
+	Enemy monster3;
 
 	public Draw(){
 		spawnEnemy();
+
+		monster1 = new Enemy(475, 390, this);
+		monster2 = new Enemy(540, 390, this);
+		monster3 = new Enemy(620, 390, this);
+
+		monsterList.add(monster1);
+		monsterList.add(monster2);
+		monsterList.add(monster3);
 		
 		try{
 			image = ImageIO.read(resource);
-			backgroundImage = ImageIO.read(getClass().getResource("background.png"));
+			backgroundPic = ImageIO.read(getClass().getResource("background.png"));
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -50,9 +62,9 @@ public class Draw extends JComponent{
 			public void run(){
 				while(true){
 					try{
-						for(int c = 0; c < monsters.length; c++){
-							if(monsters[c]!=null){
-								monsters[c].moveTo(x,y);
+						for(int c = 0; c < monsterList.size(); c++){
+							if(monsterList!=null){
+								monsterList.get(c).moveTo(x,y);
 								repaint();
 							}
 						}
@@ -67,16 +79,13 @@ public class Draw extends JComponent{
 	}
 
 	public void spawnEnemy(){
-		if(enemyCount < 10){
-			monsters[enemyCount] = new Enemy(500, 500, this);
-			enemyCount++;
-		}
+		Enemy monsterCreated = new Enemy(500, 500, this);
+		monsterList.add(monsterCreated);
+		this.repaint();
+
 	}
 
-
 	public void reloadImage(){
-		state++;
-
 		if(state == 0){
 			resource = getClass().getResource("run0.png");
 		}
@@ -88,6 +97,7 @@ public class Draw extends JComponent{
 		}
 		else if(state == 3){
 			resource = getClass().getResource("run3.png");
+			state = 0;
 		}
 		else if(state == 4){
 			resource = getClass().getResource("run4.png");
@@ -100,7 +110,6 @@ public class Draw extends JComponent{
 			resource = getClass().getResource("run6.png");
 			state = 0;
 		}
-
 		try{
 			image = ImageIO.read(resource);
 		}
@@ -115,7 +124,7 @@ public class Draw extends JComponent{
 				for(int ctr = 0; ctr < 5; ctr++){
 					try {
 						if(ctr==4){
-							resource = getClass().getResource("iddle0"+ctr+".png");
+							resource = getClass().getResource("run0.png");
 						}
 						else{
 							resource = getClass().getResource("attack"+ctr+".png");
@@ -134,13 +143,12 @@ public class Draw extends JComponent{
 					}
 				}
 
-				for(int x=0; x<monsters.length; x++){
-					if(monsters[x]!=null){
-						if(monsters[x].contact){
-							monsters[x].life = monsters[x].life - 10;
+				checkCollision();
+						for(Enemy monster : monsterList){
+							if(monster.contact){
+								monster.health = monster.health - 10;
+							}
 						}
-					}
-				}
 			}
 		});
 		thread1.start();
@@ -164,85 +172,52 @@ public class Draw extends JComponent{
 		checkCollision();
 	}
 
-	public void moveLeft(){
-		x = x - 5;
-		reloadImage();
+	public void moveRight(){
+		x = x + 5;
+		state++;
 		repaint();
+		reloadImage();
 		checkCollision();
 	}
 
-	public void moveRight(){
-		x = x + 5;
-		reloadImage();
+	public void moveLeft(){
+		x = x - 5;
+		state++;
 		repaint();
+		reloadImage();
 		checkCollision();
 	}
 
 	public void checkCollision(){
-		int xChecker = x + width;
-		int yChecker = y;
+		Rectangle playerBounds = new Rectangle(x, y, image.getWidth(), image.getHeight());
+    	for(Enemy monsters: monsterList){
+    		if(playerBounds.intersects(monsters.getBounds())){
+    			monsters.contact = true;
+    		}
+    	}
 
-		for(int x=0; x<monsters.length; x++){
-			boolean collideX = false;
-			boolean collideY = false;
-
-			if(monsters[x]!=null){
-				monsters[x].contact = false;
-
-				if(yChecker > monsters[x].yPos){
-					if(yChecker-monsters[x].yPos < monsters[x].height){
-						collideY = true;
-					}
-				}
-				else{
-					if(monsters[x].yPos - (yChecker+height) < monsters[x].height){
-						collideY = true;
-					}
-				}
-
-				if(xChecker > monsters[x].xPos){
-					if((xChecker-width)-monsters[x].xPos < monsters[x].width){
-						collideX = true;
-					}
-				}
-				else{
-					if(monsters[x].xPos-xChecker < monsters[x].width){
-						collideX = true;
-					}
-				}
-			}
-
-			if(collideX && collideY){
-				monsters[x].contact = true;
-				health = health - 2;
-						
-			}
-
-		}
+    	for(Enemy monsters: monsterList){
+    	if(monsters.getBounds().intersects(playerBounds)){
+    		health--;
+    		}
+    	}
 	}
-	
-	
+
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		g.drawImage(backgroundImage, 0, 0, this);
+		g.drawImage(backgroundPic, 0, 0, this);
 		g.drawImage(image, x, y, this);
-		
-		for(int c = 0; c < monsters.length; c++){		
-			if(monsters[c]!=null){
-				g.drawImage(monsters[c].image, monsters[c].xPos, monsters[c].yPos, this);
-				g.setColor(Color.GREEN);
-				g.fillRect(monsters[c].xPos+7, monsters[c].yPos, monsters[c].life, 2);
-			}	
-		}
-	}
+		g.setColor(Color.RED);
+		g.fillRect(5, 5, health*5, 30);
 
-	public void checkDeath(){
-		for(int c = 0; c < monsters.length; c++){
-			if(monsters[c]!=null){
-				if(!monsters[c].alive){
-					monsters[c] = null;
-				}
-			}			
-		}
+		g.drawImage(monster1.image, monster1.xPos, monster1.yPos, this);
+		g.drawImage(monster2.image, monster2.xPos, monster2.yPos, this);
+		g.drawImage(monster3.image, monster3.xPos, monster3.yPos, this);
+
+		for(Enemy monster:monsterList){
+			g.drawImage(monster.image, monster.xPos, monster.yPos, this);
+			g.setColor(Color.GREEN);
+			g.fillRect(monster.xPos, monster.yPos-5, monster.health, 5);
 	}
+}
 }
