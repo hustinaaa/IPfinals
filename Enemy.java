@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 
 public class Enemy{
 	
-	public int xPos = 150;
+	public int xPos = 450;
 	public int yPos = 300;
 	public int width = 0;
 	public int height = 0;
@@ -58,7 +58,7 @@ public class Enemy{
 								resource = getClass().getResource("monster/idle0.png");
 							}
 							else{
-								resource = getClass().getResource("monster/move"+ctr+".png");
+								resource = getClass().getResource("monster/idle0"+ctr+".png");
 							}
 							
 							try{
@@ -107,7 +107,7 @@ public class Enemy{
 				public void run(){
 					for(int ctr = 0; ctr < 4; ctr++){
 						try {					
-							resource = getClass().getResource("monster/die"+ctr+".png");
+							resource = getClass().getResource("monster/hurt"+ctr+".png");
 							
 							try{
 								image = ImageIO.read(resource);
@@ -121,12 +121,10 @@ public class Enemy{
 							e.printStackTrace();
 						}
 					}
-
-					alive = false;
-					compPass.checkDeath();
 				}
 			});
 			monThread.start();
 		}
+		alive = false;
 	}
 }

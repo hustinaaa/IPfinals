@@ -12,24 +12,23 @@ public class Draw extends JComponent{
 
 	private BufferedImage image;
 	private BufferedImage backgroundImage;
-	public URL resource = getClass().getResource("run0.png");
+	public URL resource = getClass().getResource("idle0.png");
 
 	public int x = 300;
 	public int y = 300;
+	public int health = 100;
 	public int height = 0;
 	public int width = 0;
 
 	
 	public int state = 0;
 
-	public Random randomizer;
 
 	
 	public int enemyCount;
 	Enemy[] monsters = new Enemy[10];
 
 	public Draw(){
-		randomizer = new Random();
 		spawnEnemy();
 		
 		try{
@@ -69,10 +68,11 @@ public class Draw extends JComponent{
 
 	public void spawnEnemy(){
 		if(enemyCount < 10){
-			monsters[enemyCount] = new Enemy(randomizer.nextInt(500), randomizer.nextInt(500), this);
+			monsters[enemyCount] = new Enemy(500, 500, this);
 			enemyCount++;
 		}
 	}
+
 
 	public void reloadImage(){
 		state++;
@@ -115,7 +115,7 @@ public class Draw extends JComponent{
 				for(int ctr = 0; ctr < 5; ctr++){
 					try {
 						if(ctr==4){
-							resource = getClass().getResource("run0.png");
+							resource = getClass().getResource("iddle0"+ctr+".png");
 						}
 						else{
 							resource = getClass().getResource("attack"+ctr+".png");
@@ -214,9 +214,13 @@ public class Draw extends JComponent{
 
 			if(collideX && collideY){
 				monsters[x].contact = true;
+				health = health - 2;
+						
 			}
+
 		}
 	}
+	
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);

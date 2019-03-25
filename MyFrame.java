@@ -26,6 +26,10 @@ public class MyFrame extends JFrame implements KeyListener{
 		else if(e.getKeyCode() == KeyEvent.VK_SPACE){
 			drawing.attack();
 		}
+		else if(e.getKeyCode() == KeyEvent.VK_SHIFT){
+			drawing.spawnEnemy();
+		}
+
 	}
 
 	public void keyReleased(KeyEvent e){
@@ -43,6 +47,6 @@ public class MyFrame extends JFrame implements KeyListener{
 		gameFrame.setVisible(true);
 		gameFrame.getContentPane().add(gameFrame.drawing);
 		gameFrame.addKeyListener(gameFrame);
-		System.out.println("GAME DEVELOPMENT");
+		System.out.println("Swormy");
 	}
 }
